@@ -1,92 +1,8 @@
-﻿#include <bits/stdc++.h>
-#include <immintrin.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-//#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,tune=native")
-//#pragma GCC optimize("O3")
-//#pragma GCC optimize("unroll-loops")
-
-
-template<typename T>
-istream &operator>>(istream &in, vector<T> &a) {
-    for (auto &i : a)
-        in >> i;
-    return in;
-}
-
-template<typename T>
-ostream &operator<<(ostream &out, const vector<T> &a) {
-    for (auto &i : a) {
-        out << i << " ";
-    }
-    return out;
-}
-
-template<typename T, typename D>
-istream &operator>>(istream &in, pair<T, D> &a) {
-    in >> a.first >> a.second;
-    return in;
-}
-
-template<typename T, typename D>
-ostream &operator<<(ostream &out, const pair<T, D> &a) {
-    out << a.first << " " << a.second;
-    return out;
-}
-
-struct LogOutput {
-    template<typename T>
-    LogOutput &operator<<(const T &x) {
-#ifdef DIVAN
-        cout << x;
-#endif
-        return *this;
-    }
-} dout, fout;
-
 typedef long long ll;
-typedef unsigned long long ull;
-typedef double dl;
-typedef complex<double> cd;
-
-#define nl '\n'
-#define elif else if
-#define all(_v) _v.begin(), _v.end()
-#define rall(v) v.rbegin(), v.rend()
-#define sz(v) (int)(v.size())
-#define sqr(_v) ((_v) * (_v))
-#define vpi vector<pair<int, int>>
-#define eb emplace_back
-#define pb push_back
-#define mod(x, m) ((x) >= 0 ? ((x) % m) : ((((x) % m) + m) % m))
-#define vi vector<int>
-#define pi pair<int, int>
-#define ti tuple<int, int, int>
-#define minq(x, y) x = min((x), (y))
-#define maxq(x, y) x = max(x, (y))
-#define forn(i, n) for (int i = 0; i < (n); ++i)
-
-const ll INFL = 9187201950435737471;
-const ll nINFL = -9187201950435737472;
-const int INF = 2139062143;
-const int nINF = -2139062144;
-const ull ULINF = numeric_limits<ull>::max();
-const long double PI = acos(-1);
-auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rnd(seed);
-
-inline void IO() {
-#ifdef DIVAN
-    freopen("../input.txt", "r", stdin);
-    freopen("../output.txt", "w", stdout);
-#else
-    //    freopen("input.txt", "r", stdin);
-//    freopen("output.txt", "w", stdout);
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-#endif
-}
 
 typedef ll T;
 
@@ -117,7 +33,7 @@ struct Polynom{
     }
     Polynom(int nn) {
         n = nn;
-        a.resize(n, pi{0, 1});
+        a.resize(n, pair<T, T>{0, 1});
     }
     Polynom(int nn, const vector<pair<T,T>>& aa) {
         n = nn;
@@ -147,7 +63,7 @@ struct Polynom{
     }
     Polynom operator+(const Polynom& p) {
         Polynom ans(max(n, p.n));
-        forn(i, ans.n) {
+        for (int i = 0; i < ans.n; ++i) {
             if (i < n) {
                 ans.a[i] = Add(ans.a[i], a[i]);
             }
@@ -160,8 +76,8 @@ struct Polynom{
     }
     Polynom operator*(const Polynom& p) {
         Polynom ans(n + p.n);
-        forn(i, n) {
-            forn(j, p.n) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < p.n; ++j) {
                 ans.a[i + j] = Add(ans.a[i + j], Mul(a[i], p.a[j]));
             }
         }
@@ -171,12 +87,12 @@ struct Polynom{
 };
 
 Polynom Interpolation(const vector <pair<T, T>>& coord) {
-    int n = sz(coord);
+    int n = (int)coord.size();
     Polynom ans;
-    forn(i, n) {
+    for (int i = 0; i < n; ++i) {
         Polynom mul(1);
         mul.a[0] = {1, 1};
-        forn(j, n) {
+        for (int j = 0; j < n; ++j) {
             if (i == j) {continue;}
             T del = (coord[i].first - coord[j].first);
             Polynom res = Polynom(2, vector<pair<T,T>>{pair<T,T>{-coord[j].first, del}, pair<T,T>{1, del}});
@@ -192,9 +108,11 @@ void Solve() {
     int n;
     cin >> n;
     vector <pair <T, T>> a(n);
-    cin >> a;
+    for (auto &[x, y] : a) {
+        cin >> x >> y;
+    }
     Polynom ans = Interpolation(a);
-    forn(i, ans.n) {
+    for (int i = 0; i < ans.n; ++i) {
         if (IsInteger()) {
             cout << ans.a[i].first << ' ' << ans.a[i].second << '\n';
         } else {
@@ -205,15 +123,6 @@ void Solve() {
 }
 
 signed main() {
-    IO();
-    int t = 1;
-//    cin >> t;
-    int startTime = clock();
-    for (int i = 1; i <= t; ++i) {
-//        cout << "Case #" << i << ": ";
-        Solve();
-    }
-    int endTime = clock();
-    fout << '\n' << "Time: " << (endTime - startTime + 999) / 1000;
+    Solve();
     return 0;
 }
